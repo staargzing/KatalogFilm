@@ -14,6 +14,7 @@ fun LoginScreen(navController: NavController) {
         modifier = Modifier.fillMaxSize(),
         contentAlignment = Alignment.Center
     ) {
-        Text("Ini halaman Login (Dummy)")
+        Text("tunggu yes tes dl")
     }
+
 }
