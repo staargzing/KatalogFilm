@@ -61,8 +61,8 @@ fun LoginScreen(navController: NavController) {
                         // TODO: simpan session login ke DataStore nanti
                         launch(Dispatchers.Main) {
                             Toast.makeText(context, "Login berhasil!", Toast.LENGTH_SHORT).show()
-                            navController.navigate(Screen.Home.route) {
-                                popUpTo(Screen.Login.route) { inclusive = true }
+                            navController.navigate("home") {
+                                popUpTo("login") { inclusive = true }
                             }
                         }
                     } else {
@@ -80,7 +80,7 @@ fun LoginScreen(navController: NavController) {
         Spacer(modifier = Modifier.height(8.dp))
 
         TextButton(onClick = {
-            navController.navigate(Screen.Register.route)
+            navController.navigate("register")
         }) {
             Text("Belum punya akun? Register")
         }

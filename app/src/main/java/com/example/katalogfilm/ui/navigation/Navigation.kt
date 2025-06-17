@@ -1,48 +1,49 @@
 package com.example.katalogfilm.ui.navigation
 
 import androidx.compose.runtime.Composable
+import androidx.compose.ui.Modifier
 import androidx.navigation.NavHostController
 import androidx.navigation.NavType
 import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
 import androidx.navigation.navArgument
+import com.example.katalogfilm.ui.login.LoginScreen
 import com.example.katalogfilm.ui.detail.DetailScreen
 import com.example.katalogfilm.ui.favorite.FavoriteScreen
 import com.example.katalogfilm.ui.home.HomeScreen
 import com.example.katalogfilm.ui.profile.ProfileScreen
-import com.example.katalogfilm.ui.splash.SplashScreen
-import com.example.katalogfilm.ui.login.LoginScreen
 import com.example.katalogfilm.ui.register.RegisterScreen
+import com.example.katalogfilm.ui.splash.SplashScreen
 
 @Composable
-fun AppNavigation(navController: NavHostController) {
+fun AppNavigation(
+    modifier: Modifier = Modifier,
+    navController: NavHostController
+) {
     NavHost(
         navController = navController,
-        startDestination = AuthScreen.Splash.route
+        startDestination = "splash"
     ) {
-        // AUTH
-        composable(AuthScreen.Splash.route) {
+        composable("splash") {
             SplashScreen(navController)
         }
-        composable(AuthScreen.Login.route) {
-            LoginScreen(navController)
-        }
-        composable(AuthScreen.Register.route) {
+        composable("register") {
             RegisterScreen(navController)
         }
-
-        // MAIN
-        composable(Screen.Home.route) {
+        composable("login") {
+            LoginScreen(navController)
+        }
+        composable("home") {
             HomeScreen(navController)
         }
-        composable(Screen.Favorite.route) {
+        composable("favorite") {
             FavoriteScreen()
         }
-        composable(Screen.Profile.route) {
+        composable("profile") {
             ProfileScreen()
         }
         composable(
-            route = Screen.Detail.route,
+            route = "detail/{movieId}",
             arguments = listOf(navArgument("movieId") { type = NavType.IntType })
         ) { backStackEntry ->
             val movieId = backStackEntry.arguments?.getInt("movieId") ?: 0
