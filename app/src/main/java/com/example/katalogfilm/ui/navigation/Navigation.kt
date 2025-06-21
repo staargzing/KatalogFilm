@@ -7,10 +7,10 @@ import androidx.navigation.NavType
 import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
 import androidx.navigation.navArgument
-import com.example.katalogfilm.ui.login.LoginScreen
 import com.example.katalogfilm.ui.detail.DetailScreen
 import com.example.katalogfilm.ui.favorite.FavoriteScreen
 import com.example.katalogfilm.ui.home.HomeScreen
+import com.example.katalogfilm.ui.login.LoginScreen
 import com.example.katalogfilm.ui.profile.ProfileScreen
 import com.example.katalogfilm.ui.register.RegisterScreen
 import com.example.katalogfilm.ui.splash.SplashScreen
@@ -24,6 +24,7 @@ fun AppNavigation(
         navController = navController,
         startDestination = "splash"
     ) {
+        // AUTHENTICATION SCREENS
         composable("splash") {
             SplashScreen(navController)
         }
@@ -33,21 +34,25 @@ fun AppNavigation(
         composable("login") {
             LoginScreen(navController)
         }
+
+        // MAIN SCREENS
         composable("home") {
             HomeScreen(navController)
         }
         composable("favorite") {
-            FavoriteScreen()
+            FavoriteScreen(navController)
         }
         composable("profile") {
-            ProfileScreen()
+            ProfileScreen(navController)
         }
+
+        // DETAIL SCREEN
         composable(
             route = "detail/{movieId}",
             arguments = listOf(navArgument("movieId") { type = NavType.IntType })
         ) { backStackEntry ->
             val movieId = backStackEntry.arguments?.getInt("movieId") ?: 0
-            DetailScreen(movieId)
+            DetailScreen(movieId = movieId, navController = navController)
         }
     }
 }

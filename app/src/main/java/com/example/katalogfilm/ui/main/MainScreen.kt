@@ -14,7 +14,8 @@ fun MainScreen(navController: NavHostController) {
     val navBackStackEntry by navController.currentBackStackEntryAsState()
     val currentRoute = navBackStackEntry?.destination?.route
 
-    val hideBars = currentRoute in listOf("splash", "login", "register")
+    val hideBars = currentRoute in listOf("splash", "login", "register", "detail/{movieId}")
+
 
     Scaffold(
         topBar = {

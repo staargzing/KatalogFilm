@@ -20,7 +20,7 @@ fun AppNavigation(navController: NavHostController) {
         navController = navController,
         startDestination = AuthScreen.Splash.route
     ) {
-        // AUTH
+        // AUTHENTICATION
         composable(AuthScreen.Splash.route) {
             SplashScreen(navController)
         }
@@ -31,22 +31,27 @@ fun AppNavigation(navController: NavHostController) {
             RegisterScreen(navController)
         }
 
-        // MAIN
+        // MAIN PAGES
         composable(Screen.Home.route) {
             HomeScreen(navController)
         }
         composable(Screen.Favorite.route) {
-            FavoriteScreen()
+            FavoriteScreen(navController)
         }
         composable(Screen.Profile.route) {
-            ProfileScreen()
+            ProfileScreen(navController)
         }
+
+        // DETAIL PAGE
         composable(
             route = Screen.Detail.route,
             arguments = listOf(navArgument("movieId") { type = NavType.IntType })
         ) { backStackEntry ->
             val movieId = backStackEntry.arguments?.getInt("movieId") ?: 0
-            DetailScreen(movieId)
+            DetailScreen(
+                movieId = movieId,
+                navController = navController // ✅ wajib disertakan
+            )
         }
     }
 }

@@ -1,30 +1,68 @@
 package com.example.katalogfilm.ui.profile
 
+import android.widget.Toast
 import androidx.compose.foundation.layout.*
 import androidx.compose.material3.*
-import androidx.compose.runtime.Composable
+import androidx.compose.runtime.*
+import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.unit.dp
+import androidx.lifecycle.viewmodel.compose.viewModel
+import androidx.navigation.NavController
+import com.example.katalogfilm.data.local.AppDatabase
+import com.example.katalogfilm.datastore.SessionManager
+import com.example.katalogfilm.viewmodel.ProfileViewModel
+import com.example.katalogfilm.viewmodel.ProfileViewModelFactory
+import kotlinx.coroutines.launch
 
-@OptIn(ExperimentalMaterial3Api::class)
 @Composable
-fun ProfileScreen() {
-    Scaffold(
-        topBar = {
-            TopAppBar(
-                title = { Text("Profil Pengguna") }
-            )
+fun ProfileScreen(navController: NavController) {
+    val context = LocalContext.current
+    val db = remember { AppDatabase.getInstance(context) }
+    val viewModel: ProfileViewModel = viewModel(
+        factory = ProfileViewModelFactory(db.userDao())
+    )
+    val scope = rememberCoroutineScope()
+
+    val user by viewModel.user.collectAsState()
+
+    LaunchedEffect(true) {
+        val userId = SessionManager.getUserId(context)
+        if (userId != null) {
+            viewModel.loadUser(userId)
+        } else {
+            navController.navigate("login") {
+                popUpTo("profile") { inclusive = true }
+            }
         }
-    ) { padding ->
-        Column(
-            modifier = Modifier
-                .padding(padding)
-                .fillMaxSize()
-                .padding(16.dp)
-        ) {
-            Text("Nama: User Contoh")
-            Spacer(modifier = Modifier.height(8.dp))
-            Text("Email: user@example.com")
+    }
+
+    Column(
+        modifier = Modifier
+            .fillMaxSize()
+            .padding(32.dp),
+        horizontalAlignment = Alignment.CenterHorizontally,
+        verticalArrangement = Arrangement.Center
+    ) {
+        Text("Profil", style = MaterialTheme.typography.headlineMedium)
+        Spacer(modifier = Modifier.height(24.dp))
+
+        Text("Nama: ${user?.name ?: "-"}")
+        Text("Email: ${user?.email ?: "-"}")
+
+        Spacer(modifier = Modifier.height(24.dp))
+
+        Button(onClick = {
+            scope.launch {
+                SessionManager.clearSession(context)
+                Toast.makeText(context, "Logout berhasil", Toast.LENGTH_SHORT).show()
+                navController.navigate("login") {
+                    popUpTo("profile") { inclusive = true }
+                }
+            }
+        }) {
+            Text("Logout")
         }
     }
 }
